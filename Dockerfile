@@ -17,4 +17,4 @@ COPY . /app
 EXPOSE 8080
 
 # Run the app
-CMD ["python", "app.py"]
+CMD ["python", "app.py", "--host=0.0.0.0", "--port=${PORT:-8080}"]
