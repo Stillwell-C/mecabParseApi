@@ -33,7 +33,8 @@ class ParseSentence(Resource):
                 "start": morpheme.span.start,
                 "end": morpheme.span.end,
                 "text": morpheme.surface,
-                "POS": morpheme.feature.pos
+                "POS": morpheme.feature.pos,
+                "expression": morpheme.feature.expression
             }
             formatted.append(morphemeDic)
         jsonResponse = {"status": 200, "results": str(formatted), "message": "success"}
