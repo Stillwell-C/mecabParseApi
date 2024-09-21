@@ -1,5 +1,5 @@
-from flask import Flask
-from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
+from flask import Flask, jsonify
+from flask_restful import Resource, Api, reqparse, abort
 from flask_cors import CORS
 from mecab import MeCab
 import os
@@ -13,14 +13,7 @@ api = Api(app)
 sentence_args = reqparse.RequestParser()
 sentence_args.add_argument('sentence', type=str, required=True, help="Must provide sentence to be parsed")
 
-parseFields = {
-    'status':fields.Integer,
-    'results':fields.String,
-    'message':fields.String,
-}
-
 class ParseSentence(Resource):
-    @marshal_with(parseFields)
     def post(self):
         args = sentence_args.parse_args()
         parseReq = args['sentence']
@@ -37,8 +30,9 @@ class ParseSentence(Resource):
                 "expression": morpheme.feature.expression
             }
             formatted.append(morphemeDic)
-        jsonResponse = {"status": 200, "results": str(formatted), "message": "success"}
-        return jsonResponse, 200
+        jsonResponse = jsonify({"status": 200, "results": formatted, "message": "success"})
+        jsonResponse.status_code = 200
+        return jsonResponse
 
 api.add_resource(ParseSentence, '/parse')
 
