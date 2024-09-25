@@ -3,6 +3,7 @@ from flask_restful import Resource, Api, reqparse, abort
 from flask_cors import CORS
 from mecab import MeCab
 import os
+from grammarCheck import grammarCheck
 
 mecab = MeCab()
 
@@ -30,7 +31,8 @@ class ParseSentence(Resource):
                 "expression": morpheme.feature.expression
             }
             formatted.append(morphemeDic)
-        jsonResponse = jsonify({"status": 200, "results": formatted, "message": "success"})
+        possibleGrammarMatches = grammarCheck(parseReq)
+        jsonResponse = jsonify({"status": 200, "results": formatted, "possibleGrammarMatches": possibleGrammarMatches, "message": "success"})
         jsonResponse.status_code = 200
         return jsonResponse
 
